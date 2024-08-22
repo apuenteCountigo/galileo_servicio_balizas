@@ -56,6 +56,8 @@ public interface BalizasRepository extends PagingAndSortingRepository<Balizas, L
 			@DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime fechaInicio,
 			@DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime fechaFin, Pageable p);
 
+	public List<Balizas> findByEstados_id(Long idEstadoBaliza);
+
 	@RestResource(path = "buscarId")
 	public Balizas findById(long id);
 
