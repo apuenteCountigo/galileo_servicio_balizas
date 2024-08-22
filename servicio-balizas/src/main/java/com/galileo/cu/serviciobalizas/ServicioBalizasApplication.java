@@ -10,18 +10,18 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 @SpringBootApplication
 @EnableFeignClients
 @EnableEurekaClient
-@EntityScan({"com.galileo.cu.commons.models"})
-public class ServicioBalizasApplication implements CommandLineRunner{
+@EntityScan({ "com.galileo.cu.commons.models" })
+public class ServicioBalizasApplication implements CommandLineRunner {
 
-    public static void main(String[] args) {
-        SpringApplication.run(ServicioBalizasApplication.class, args);
-    }
+	public static void main(String[] args) {
+		SpringApplication.run(ServicioBalizasApplication.class, args);
+	}
 
 	@Override
 	public void run(String... args) throws Exception {
 		System.out.println("**************************************");
-		System.out.println("Balizas V-0708-16:11");
-		
+		System.out.println("Balizas V-2408220854");
+
 	}
 
 }
