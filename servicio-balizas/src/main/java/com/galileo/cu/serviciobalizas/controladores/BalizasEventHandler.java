@@ -209,7 +209,7 @@ public class BalizasEventHandler {
 						throw new RuntimeException(
 								"Fallo al Intentar Desasignar la Baliza:" + balizas.getClave() + " en DataMiner");
 					}
-				} else if (btmp.getEstados() != balizas.getEstados()) {
+				} else if (btmp.getEstados().getId() != balizas.getEstados().getId()) {
 					traccar.cambiarEstado(balizas);
 					Optional<Estados> est = estadosRepo.findById(balizas.getEstados().getId());
 					Optional<Estados> estTmp = estadosRepo.findById(btmp.getEstados().getId());
