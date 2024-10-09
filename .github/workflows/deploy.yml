@@ -50,7 +50,7 @@ jobs:
               echo "validada galileo-dev-v1.1/balizas/galileo-servicio-balizas" &&
               git clone https://github.com/apuenteCountigo/galileo_servicio_balizas.git
             fi
-            cd galileo-servicio-balizas &&
+            cd galileo_servicio_balizas &&
             git fetch origin &&
             git checkout version-1.1 &&
             git reset --hard origin/version-1.1 &&
