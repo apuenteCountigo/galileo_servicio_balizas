@@ -48,7 +48,7 @@ jobs:
             cd galileo-dev-v1.1/balizas &&
             if [ ! -d "galileo-servicio-balizas" ]; then
               echo "validada galileo-dev-v1.1/balizas/galileo-servicio-balizas" &&
-              git clone https://github.com/apuenteCountigo/galileo-servicio-balizas.git
+              git clone https://github.com/apuenteCountigo/galileo_servicio_balizas.git
             fi
             cd galileo-servicio-balizas &&
             git fetch origin &&
