@@ -237,19 +237,17 @@ public class BalizasEventHandler {
 		/* Validando Autorización */
 		ValidateAuthorization val = new ValidateAuthorization();
 		try {
-			System.out.println("REQUEST HandleAfterSave: " + req.getMethod());
 			val.setObjectMapper(objectMapper);
 			val.setReq(req);
 			if (!val.Validate()) {
 				throw new RuntimeException("Fallo de Autorización");
 			}
 		} catch (Exception e) {
-			System.out.println("Fallo Después de Salvar Baliza Validando Autorización: " + e.getMessage());
+			log.error("Fallo Después de Salvar Baliza Validando Autorización: " + e.getMessage());
 			throw new RuntimeException("Fallo Después de Salvar Baliza Validando Autorización: " + e.getMessage());
 		}
 
 		try {
-			System.out.println("Salvando la Baliza en la Trazabilidad AfterSave");
 			Trazas traza = new Trazas();
 			AccionEntidad accion = new AccionEntidad();
 			Usuarios usuario = new Usuarios();
@@ -267,8 +265,7 @@ public class BalizasEventHandler {
 			trazasRepo.save(traza);
 
 		} catch (Exception e) {
-			System.out.println("Fallo al Salvar la Baliza en la Trazabilidad");
-			System.out.println(e.getMessage());
+			log.error("Fallo al Salvar la Baliza en la Trazabilidad", e.getMessage());
 			throw new RuntimeException("Fallo al Salvar la Baliza en la Trazabilidad");
 		}
 	}
@@ -278,23 +275,20 @@ public class BalizasEventHandler {
 		/* Validando Autorización */
 		ValidateAuthorization val = new ValidateAuthorization();
 		try {
-			System.out.println("REQUEST HandleBeforeDelete: " + req.getMethod());
 			val.setObjectMapper(objectMapper);
 			val.setReq(req);
 			if (!val.Validate()) {
 				throw new RuntimeException("Fallo de Autorización");
 			}
 		} catch (Exception e) {
-			System.out.println("Fallo Antes de Eliminar Baliza Validando Autorización: " + e.getMessage());
+			log.error("Fallo Antes de Eliminar Baliza Validando Autorización: ", e.getMessage());
 			throw new RuntimeException("Fallo Antes de Eliminar Baliza Validando Autorización: " + e.getMessage());
 		}
 
 		try {
-			System.out.println("*****HandleBeforeDelete Servidor:" + balizas.getServidor().getIpServicio());
 			traccar.borrar(balizas);
 		} catch (Exception e) {
-			System.out.println("Fallo al Eliminar la Baliza en Dataminer ");
-			System.out.println(e.getMessage());
+			log.error("Fallo al Eliminar la Baliza en Dataminer", e.getMessage());
 			throw new RuntimeException("Fallo al eliminar la Baliza en Dataminer ");
 		}
 	}
@@ -304,19 +298,17 @@ public class BalizasEventHandler {
 		/* Validando Autorización */
 		ValidateAuthorization val = new ValidateAuthorization();
 		try {
-			System.out.println("REQUEST HandleAfterDelete: " + req.getMethod());
 			val.setObjectMapper(objectMapper);
 			val.setReq(req);
 			if (!val.Validate()) {
 				throw new RuntimeException("Fallo de Autorización");
 			}
 		} catch (Exception e) {
-			System.out.println("Fallo Después de Eliminar Baliza Validando Autorización: " + e.getMessage());
+			log.error("Fallo Después de Eliminar Baliza Validando Autorización: ", e.getMessage());
 			throw new RuntimeException("Fallo Después de Eliminar Baliza Validando Autorización: " + e.getMessage());
 		}
 
 		try {
-			System.out.println("Eliminar la Baliza en la Trazabilidad AfterDelete");
 			Trazas traza = new Trazas();
 			AccionEntidad accion = new AccionEntidad();
 			Usuarios usuario = new Usuarios();
@@ -334,8 +326,7 @@ public class BalizasEventHandler {
 			trazasRepo.save(traza);
 
 		} catch (Exception e) {
-			System.out.println("Fallo al Insertar la Eliminación de la Baliza en la Trazabilidad");
-			System.out.println(e.getMessage());
+			log.error("Fallo al Insertar la Eliminación de la Baliza en la Trazabilidad", e.getMessage());
 			throw new RuntimeException("Fallo al Insertar la Eliminación de la Baliza en la Trazabilidad");
 		}
 	}
