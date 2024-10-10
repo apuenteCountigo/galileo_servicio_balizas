@@ -193,6 +193,7 @@ public class BalizasEventHandler {
 							err = er.getMessage();
 						}
 						log.error(err, er);
+						log.error("e.getMessage()********** {}", er.getMessage());
 						throw new RuntimeException(err);
 					}
 				} else if (btmp.getUnidades() != null && balizas.getUnidades() == null) {
@@ -245,6 +246,7 @@ public class BalizasEventHandler {
 			}
 		} catch (Exception e) {
 			if (e.getMessage().contains("Fallo")) {
+				log.error("e.getMessage()::::::::: {}", e.getMessage());
 				throw new RuntimeException(e.getMessage());
 			}
 			log.error("Fallo General al Actualizar la Baliza:" + balizas.getClave(), e.getMessage());
