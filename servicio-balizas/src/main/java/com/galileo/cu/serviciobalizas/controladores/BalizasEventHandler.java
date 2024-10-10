@@ -187,10 +187,13 @@ public class BalizasEventHandler {
 						descripcionTraza = "La Baliza: " + balizas.getClave() + " Fue Asignada a la Unidad: "
 								+ balizas.getUnidades().getDenominacion();
 					} catch (Exception er) {
-						log.error("Fallo al Intentar Asignar la Baliza:" + balizas.getClave()
-								+ " a una Unidad en DataMiner", er.getMessage());
-						throw new RuntimeException("Fallo al Intentar Asignar la Baliza:" + balizas.getClave()
-								+ " a una Unidad en DataMiner");
+						String err = "Fallo al Intentar Asignar la Baliza:" + balizas.getClave()
+								+ " a una Unidad en DataMiner";
+						if (er.getMessage().contains("Fallo")) {
+							err = er.getMessage();
+						}
+						log.error(err + er);
+						throw new RuntimeException(err);
 					}
 				} else if (btmp.getUnidades() != null && balizas.getUnidades() == null) {
 					Optional<Unidades> uni = unidadesRepo.findById(btmp.getUnidades().getId());
@@ -210,7 +213,24 @@ public class BalizasEventHandler {
 						}
 						err = "Fallo verificando objetivos relacionados con la baliza";
 						log.error(err, e.getMessage());
-						throw new RuntimeException("Fallo al eliminar la unidad");
+						throw new RuntimeException(err);
+					}
+
+					try {
+						Estados estado = new Estados();
+						estado.setId(21);
+						balizas.setEstados(estado);
+						traccar.desasignar(balizas);
+						descripcionTraza = "La Baliza: " + balizas.getClave() + " Fue Desasignada de la Unidad: "
+								+ btmp.getUnidades().getDenominacion();
+						balizas.setObjetivo("");
+					} catch (Exception er) {
+						err = "Fallo al Intentar Desasignar la Baliza:" + balizas.getClave() + " en DataMiner";
+						if (er.getMessage().contains("Fallo"))
+							err = er.getMessage();
+
+						log.error(err, er.getMessage());
+						throw new RuntimeException(err);
 					}
 
 				} else if (btmp.getEstados().getId() != balizas.getEstados().getId()) {
