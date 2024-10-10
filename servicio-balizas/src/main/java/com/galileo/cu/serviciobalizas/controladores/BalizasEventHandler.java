@@ -225,6 +225,9 @@ public class BalizasEventHandler {
 				}
 			}
 		} catch (Exception e) {
+			if (e.getMessage().contains("Fallo")) {
+				throw new RuntimeException(e.getMessage());
+			}
 			log.error("Fallo General al Actualizar la Baliza:" + balizas.getClave(), e.getMessage());
 			throw new RuntimeException("Fallo General al Actualizar la Baliza ");
 		}
