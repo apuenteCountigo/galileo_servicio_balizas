@@ -204,7 +204,6 @@ public class BalizasEventHandler {
 							log.error(err);
 							throw new RuntimeException(err);
 						}
-						throw new RuntimeException("Error Frozado");
 					} catch (Exception e) {
 						if (e.getMessage().contains("Fallo")) {
 							throw new RuntimeException(e.getMessage());
