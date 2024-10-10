@@ -31,9 +31,14 @@ import com.galileo.cu.serviciobalizas.clientes.TraccarFeign;
 import com.galileo.cu.serviciobalizas.interceptores.ValidateAuthorization;
 import com.galileo.cu.serviciobalizas.repositorio.BalizasRepository;
 import com.galileo.cu.serviciobalizas.repositorio.EstadosRepository;
+import com.galileo.cu.serviciobalizas.repositorio.ObjetivosRepository;
 import com.galileo.cu.serviciobalizas.repositorio.TrazasRepository;
 import com.galileo.cu.serviciobalizas.repositorio.UnidadesRepository;
+import com.google.common.base.Strings;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @Component
 @RepositoryEventHandler(Balizas.class)
 public class BalizasEventHandler {
@@ -42,6 +47,9 @@ public class BalizasEventHandler {
 
 	@Autowired
 	BalizasRepository balizasRepository;
+
+	@Autowired
+	ObjetivosRepository objRepo;
 
 	@Autowired
 	TrazasRepository trazasRepo;
@@ -68,14 +76,13 @@ public class BalizasEventHandler {
 		/* Validando Autorización */
 		try {
 			ValidateAuthorization val = new ValidateAuthorization();
-			System.out.println("REQUEST HandleBeforeCreate: " + req.getMethod());
 			val.setObjectMapper(objectMapper);
 			val.setReq(req);
 			if (!val.Validate()) {
 				throw new RuntimeException("Fallo el Usuario Enviado no Coincide con el Autenticado ");
 			}
 		} catch (Exception e) {
-			System.out.println("Fallo Antes de Crear Baliza Validando Autorización: " + e.getMessage());
+			log.error("Fallo Antes de Crear Baliza Validando Autorización", e.getMessage());
 			throw new RuntimeException("Fallo Antes de Crear Baliza Validando Autorización");
 		}
 
@@ -98,16 +105,15 @@ public class BalizasEventHandler {
 
 			Balizas balizasUpdate = traccar.salvar(balizas);
 
-			System.out.println("Creando balizasUpdate IdDataminer: " + balizasUpdate.getIdDataminer());
+			log.info("Creando balizasUpdate IdDataminer: " + balizasUpdate.getIdDataminer());
 			balizas.setIdDataminer(balizasUpdate.getIdDataminer());
-			System.out.println("Creando balizas IdDataminer: " + balizas.getIdDataminer());
+			log.info("Creando balizas IdDataminer: " + balizas.getIdDataminer());
 			balizas.setIdElement(balizasUpdate.getIdElement());
-			System.out.println("Creando balizas getIdElement: " + balizas.getIdElement());
+			log.info("Creando balizas getIdElement: " + balizas.getIdElement());
 		} catch (Exception e) {
-			System.out.println("Fallo al Insertar la Baliza en Dataminer ");
-			System.out.println(e.getMessage());
-			if (e.getMessage().contains("Error, ya existe una baliza con ese nombre en DataMiner")) {
-				throw new RuntimeException("Error, ya existe una baliza con ese nombre en DataMiner");
+			log.error("Fallo al Insertar la Baliza en Dataminer ", e.getMessage());
+			if (e.getMessage().contains("ya existe una baliza con ese nombre en DataMiner")) {
+				throw new RuntimeException("ya existe una baliza con ese nombre en DataMiner");
 			}
 			throw new RuntimeException("Fallo al Insertar Baliza en Dataminer ");
 		}
@@ -118,26 +124,24 @@ public class BalizasEventHandler {
 		/* Validando Autorización */
 		ValidateAuthorization val = new ValidateAuthorization();
 		try {
-			System.out.println("REQUEST HandleAfterCreate: " + req.getMethod());
 			val.setObjectMapper(objectMapper);
 			val.setReq(req);
 			if (!val.Validate()) {
 				throw new RuntimeException("Fallo el Usuario Enviado no Coincide con el Autenticado ");
 			}
 		} catch (Exception e) {
-			System.out.println("Fallo Antes de Crear Baliza Validando Autorización: " + e.getMessage());
-			throw new RuntimeException("Fallo Antes de Crear Baliza Validando Autorización: " + e.getMessage());
+			log.error("Fallo Antes de Crear Baliza Validando Autorización: " + e.getMessage());
+			throw new RuntimeException("Fallo Antes de Crear Baliza Validando Autorización");
 		}
 
 		try {
 			traccar.enviarIdBalizaBD(balizas);
 		} catch (Exception e) {
-			System.out.println("Fallo Enviando id de Baliza a Dataminer Parámetro 2009: " + e.getMessage());
+			log.error("Fallo Enviando id de Baliza a Dataminer Parámetro 2009: " + e.getMessage());
 			throw new RuntimeException("Fallo Enviando id de Baliza a Dataminer Parámetro 2009");
 		}
 
 		try {
-			System.out.println("Insertar la Baliza en la Trazabilidad AfterCreate");
 			Trazas traza = new Trazas();
 			AccionEntidad accion = new AccionEntidad();
 			Usuarios usuario = new Usuarios();
@@ -155,8 +159,7 @@ public class BalizasEventHandler {
 			trazasRepo.save(traza);
 
 		} catch (Exception e) {
-			System.out.println("Fallo al Insertar la Baliza en la Trazabilidad");
-			System.out.println(e.getMessage());
+			log.error("Fallo al Insertar la Baliza en la Trazabilidad", e.getMessage());
 			throw new RuntimeException("Fallo al Insertar Baliza en la Trazabilidad");
 		}
 	}
@@ -165,7 +168,7 @@ public class BalizasEventHandler {
 	public void handleBalizasBeforeSave(Balizas balizas) {
 		descripcionTraza = null;
 		entMg.detach(balizas);
-		System.out.println("Actualizando Baliza");
+
 		try {
 			if (balizas == null) {
 				throw new RuntimeException("Fallo la Baliza no debe ser Nulo ");
@@ -173,7 +176,7 @@ public class BalizasEventHandler {
 				Balizas btmp = balizasRepository.findById(balizas.getId());
 				if (btmp.getUnidades() == null && balizas.getUnidades() != null) {
 					Optional<Unidades> uni = unidadesRepo.findById(balizas.getUnidades().getId());
-					System.out.println("ASIGNANDO A UNIDAD LA BALIZA:" + balizas.getClave() + " UNIDAD:"
+					log.info("ASIGNANDO A UNIDAD LA BALIZA:" + balizas.getClave() + " UNIDAD:"
 							+ uni.get().getDenominacion());
 					try {
 						Estados estado = new Estados();
@@ -184,31 +187,33 @@ public class BalizasEventHandler {
 						descripcionTraza = "La Baliza: " + balizas.getClave() + " Fue Asignada a la Unidad: "
 								+ balizas.getUnidades().getDenominacion();
 					} catch (Exception er) {
-						System.out.println("Fallo al Intentar Asignar la Baliza:" + balizas.getClave()
-								+ " a una Unidad en DataMiner");
-						System.out.println(er.getMessage());
+						log.error("Fallo al Intentar Asignar la Baliza:" + balizas.getClave()
+								+ " a una Unidad en DataMiner", er.getMessage());
 						throw new RuntimeException("Fallo al Intentar Asignar la Baliza:" + balizas.getClave()
 								+ " a una Unidad en DataMiner");
 					}
 				} else if (btmp.getUnidades() != null && balizas.getUnidades() == null) {
 					Optional<Unidades> uni = unidadesRepo.findById(btmp.getUnidades().getId());
-					System.out.println(
-							"DESASIGNAR BALIZA:" + balizas.getClave() + " UNIDAD:" + uni.get().getDenominacion());
-					// PENDIENTE POR RAFAEL DESASIGNACIÓN EN EL API
+					log.info("DESASIGNAR BALIZA:" + balizas.getClave() + " UNIDAD:" + uni.get().getDenominacion());
+
+					String err = "Fallo al intentar devolver baliza de la unidad. La balizas está asociada a un objetivo.";
 					try {
-						Estados estado = new Estados();
-						estado.setId(21);
-						balizas.setEstados(estado);
-						traccar.desasignar(balizas);
-						descripcionTraza = "La Baliza: " + balizas.getClave() + " Fue Desasignada de la Unidad: "
-								+ btmp.getUnidades().getDenominacion();
-					} catch (Exception er) {
-						System.out.println(
-								"Fallo al Intentar Desasignar la Baliza:" + balizas.getClave() + " en DataMiner");
-						System.out.println(er.getMessage());
-						throw new RuntimeException(
-								"Fallo al Intentar Desasignar la Baliza:" + balizas.getClave() + " en DataMiner");
+						long qty = objRepo.countByBalizas(btmp);
+						if (qty > 0) {
+							log.error("Los objetivos relacionado son: {}", qty);
+							log.error(err);
+							throw new RuntimeException(err);
+						}
+						throw new RuntimeException("Error Frozado");
+					} catch (Exception e) {
+						if (e.getMessage().contains("Fallo")) {
+							throw new RuntimeException(e.getMessage());
+						}
+						err = "Fallo verificando objetivos relacionados con la baliza";
+						log.error(err, e.getMessage());
+						throw new RuntimeException("Fallo al eliminar la unidad");
 					}
+
 				} else if (btmp.getEstados().getId() != balizas.getEstados().getId()) {
 					traccar.cambiarEstado(balizas);
 					Optional<Estados> est = estadosRepo.findById(balizas.getEstados().getId());
@@ -220,8 +225,7 @@ public class BalizasEventHandler {
 				}
 			}
 		} catch (Exception e) {
-			System.out.println("Fallo General al Actualizar la Baliza:" + balizas.getClave());
-			System.out.println(e.getMessage());
+			log.error("Fallo General al Actualizar la Baliza:" + balizas.getClave(), e.getMessage());
 			throw new RuntimeException("Fallo General al Actualizar la Baliza ");
 		}
 	}
