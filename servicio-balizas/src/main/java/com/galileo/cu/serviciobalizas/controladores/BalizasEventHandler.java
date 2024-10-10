@@ -192,7 +192,7 @@ public class BalizasEventHandler {
 						if (er.getMessage().contains("Fallo")) {
 							err = er.getMessage();
 						}
-						log.error(err + er);
+						log.error(err, er);
 						throw new RuntimeException(err);
 					}
 				} else if (btmp.getUnidades() != null && balizas.getUnidades() == null) {
