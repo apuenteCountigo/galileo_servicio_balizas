@@ -189,11 +189,10 @@ public class BalizasEventHandler {
 					} catch (Exception er) {
 						String err = "Fallo al Intentar Asignar la Baliza:" + balizas.getClave()
 								+ " a una Unidad en DataMiner";
-						if (er.getMessage().contains("Fallo")) {
-							err = er.getMessage();
+						if (er.getMessage().contains("Fallo, la baliza no se encuentra en DMA")) {
+							err = "Fallo, la baliza no se encuentra en DMA, por favor elimínela";
 						}
 						log.error(err, er);
-						log.error("e.getMessage()********** {}", er.getMessage());
 						throw new RuntimeException(err);
 					}
 				} else if (btmp.getUnidades() != null && balizas.getUnidades() == null) {
@@ -246,7 +245,7 @@ public class BalizasEventHandler {
 			}
 		} catch (Exception e) {
 			if (e.getMessage().contains("Fallo")) {
-				log.error("e.getMessage()::::::::: {}", e.getMessage());
+				log.error(e.getMessage());
 				throw new RuntimeException(e.getMessage());
 			}
 			log.error("Fallo General al Actualizar la Baliza:" + balizas.getClave(), e.getMessage());
