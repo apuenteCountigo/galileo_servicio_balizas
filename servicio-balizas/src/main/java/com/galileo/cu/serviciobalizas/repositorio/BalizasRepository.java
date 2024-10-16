@@ -8,6 +8,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
+import org.springframework.data.repository.query.Param;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import org.springframework.data.rest.core.annotation.RestResource;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -54,6 +55,28 @@ public interface BalizasRepository extends PagingAndSortingRepository<Balizas, L
 			String compania,
 			@DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime fechaInicio,
 			@DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime fechaFin, Pageable p);
+
+	@Query("SELECT b FROM Balizas b WHERE " +
+			"(:idUnidad IS NULL OR b.unidades.id = :idUnidad) AND " +
+			"(:idEstadoBaliza IS NULL OR b.estados.id = :idEstadoBaliza) AND " +
+			"(:clave IS NULL OR b.clave = :clave) AND " +
+			"(:modelo IS NULL OR b.modelo = :modelo) AND " +
+			"(:objetivo IS NULL OR b.objetivo = :objetivo) AND " +
+			"(:numSerie IS NULL OR b.numSerie = :numSerie) AND " +
+			"(:marca IS NULL OR b.marca = :marca) AND " +
+			"(:compania IS NULL OR b.compania = :compania) AND " +
+			"(:fechaInicio IS NULL OR :fechaFin IS NULL OR b.fechaAlta BETWEEN :fechaInicio AND :fechaFin)")
+	List<Balizas> findByFilters(
+			@Param("idUnidad") Long idUnidad,
+			@Param("idEstadoBaliza") Long idEstadoBaliza,
+			@Param("clave") String clave,
+			@Param("modelo") String modelo,
+			@Param("objetivo") String objetivo,
+			@Param("numSerie") String numSerie,
+			@Param("marca") String marca,
+			@Param("compania") String compania,
+			@Param("fechaInicio") LocalDateTime fechaInicio,
+			@Param("fechaFin") LocalDateTime fechaFin);
 
 	@RestResource(path = "buscarId")
 	public Balizas findById(long id);
