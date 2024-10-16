@@ -42,12 +42,12 @@ public interface BalizasRepository extends PagingAndSortingRepository<Balizas, L
 
 	/* FILTRO PARA BALIZAS STOCK */
 	@Query("SELECT b FROM Balizas b "
-			+ "WHERE (:clave='' OR b.clave like %:clave%) "
-			+ "AND (:marca='' OR b.marca like %:marca%) "
-			+ "AND (:numSerie='' OR b.numSerie like %:numSerie%) "
-			+ "AND (:compania='' OR b.compania like %:compania%) "
+			+ "WHERE (:clave IS NULL OR :clave='' OR b.clave like %:clave%) "
+			+ "AND (:marca IS NULL OR :marca='' OR b.marca like %:marca%) "
+			+ "AND (:numSerie IS NULL OR :numSerie='' OR b.numSerie like %:numSerie%) "
+			+ "AND (:compania IS NULL OR :compania='' OR b.compania like %:compania%) "
 			+ "AND ((:unidad = -2 AND b.unidades IS NULL) OR (:objetivo IS NULL OR :objetivo='' OR (b.objetivo IS NOT NULL AND b.objetivo like %:objetivo%))) "
-			+ "AND (:modelo='' OR b.modelo like %:modelo%) "
+			+ "AND (:modelo IS NULL OR :modelo='' OR b.modelo like %:modelo%) "
 			+ "AND (:unidad=0 OR (:unidad>0 AND b.unidades.Id = :unidad) OR (:unidad=-1 AND b.unidades != null)  OR (:unidad=-2 AND b.unidades = null)) "
 			+ " AND (:idEstadoBaliza=0 OR b.estados.Id = :idEstadoBaliza) "
 			+ "AND ((:fechaFin!=null AND :fechaInicio!=null AND b.fechaAlta between :fechaInicio AND :fechaFin) "
