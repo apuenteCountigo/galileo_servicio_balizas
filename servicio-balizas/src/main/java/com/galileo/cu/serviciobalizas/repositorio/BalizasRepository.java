@@ -47,13 +47,14 @@ public interface BalizasRepository extends PagingAndSortingRepository<Balizas, L
 			+ "and (:numSerie='' or b.numSerie like %:numSerie%) "
 			+ "and (:compania='' or b.compania like %:compania%) "
 			+ "and (:objetivo='' or b.objetivo like %:objetivo%) "
+			+ "and (:modelo='' or b.modelo like %:modelo%) "
 			+ "and (:unidad=0 OR (:unidad>0 AND b.unidades.Id = :unidad) OR (:unidad=-1 AND b.unidades != null)  OR (:unidad=-2 AND b.unidades = null)) "
 			+ " AND (:idEstadoBaliza=0 or b.estados.Id = :idEstadoBaliza) "
 			+ "and ((:fechaFin!=null and :fechaInicio!=null and b.fechaAlta between :fechaInicio and :fechaFin) "
 			+ "or (:fechaFin=null and :fechaInicio!=null and b.fechaAlta >=:fechaInicio) "
 			+ "or (:fechaFin=null and :fechaInicio=null)) ")
 	public Page<Balizas> buscarBalizas(int idEstadoBaliza, int unidad, String clave, String marca, String numSerie,
-			String compania, String objetivo,
+			String compania, String objetivo, String modelo,
 			@DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime fechaInicio,
 			@DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime fechaFin, Pageable p);
 
