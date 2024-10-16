@@ -77,7 +77,7 @@ public interface BalizasRepository extends PagingAndSortingRepository<Balizas, L
 			@Param("marca") String marca,
 			@Param("compania") String compania,
 			@Param("fechaInicio") LocalDateTime fechaInicio,
-			@Param("fechaFin") LocalDateTime fechaFin);
+			@Param("fechaFin") LocalDateTime fechaFin, Pageable p);
 
 	@RestResource(path = "buscarId")
 	public Balizas findById(long id);
