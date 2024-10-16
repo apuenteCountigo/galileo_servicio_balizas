@@ -46,7 +46,7 @@ public interface BalizasRepository extends PagingAndSortingRepository<Balizas, L
 			+ "AND (:marca='' OR b.marca like %:marca%) "
 			+ "AND (:numSerie='' OR b.numSerie like %:numSerie%) "
 			+ "AND (:compania='' OR b.compania like %:compania%) "
-			+ "AND ((:unidad = -2 AND b.unidades IS NULL AND :objetivo IS NULL) OR (:objetivo IS NULL OR :objetivo='' OR (b.objetivo IS NOT NULL AND b.objetivo like %:objetivo%))) "
+			+ "AND ((:unidad = -2 AND b.unidades IS NULL) OR (:objetivo IS NULL OR :objetivo='' OR (b.objetivo IS NOT NULL AND b.objetivo like %:objetivo%))) "
 			+ "AND (:modelo='' OR b.modelo like %:modelo%) "
 			+ "AND (:unidad=0 OR (:unidad>0 AND b.unidades.Id = :unidad) OR (:unidad=-1 AND b.unidades != null)  OR (:unidad=-2 AND b.unidades = null)) "
 			+ " AND (:idEstadoBaliza=0 OR b.estados.Id = :idEstadoBaliza) "
