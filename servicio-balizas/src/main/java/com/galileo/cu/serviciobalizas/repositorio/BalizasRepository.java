@@ -42,17 +42,17 @@ public interface BalizasRepository extends PagingAndSortingRepository<Balizas, L
 
 	/* FILTRO PARA BALIZAS STOCK */
 	@Query("SELECT b FROM Balizas b "
-			+ "WHERE (:clave='' or b.clave like %:clave%) "
-			+ "and (:marca='' or b.marca like %:marca%) "
-			+ "and (:numSerie='' or b.numSerie like %:numSerie%) "
-			+ "and (:compania='' or b.compania like %:compania%) "
-			+ "and (:objetivo='' or b.objetivo like %:objetivo%) "
-			+ "and (:modelo='' or b.modelo like %:modelo%) "
-			+ "and (:unidad=0 OR (:unidad>0 AND b.unidades.Id = :unidad) OR (:unidad=-1 AND b.unidades != null)  OR (:unidad=-2 AND b.unidades = null)) "
-			+ " AND (:idEstadoBaliza=0 or b.estados.Id = :idEstadoBaliza) "
-			+ "and ((:fechaFin!=null and :fechaInicio!=null and b.fechaAlta between :fechaInicio and :fechaFin) "
-			+ "or (:fechaFin=null and :fechaInicio!=null and b.fechaAlta >=:fechaInicio) "
-			+ "or (:fechaFin=null and :fechaInicio=null)) ")
+			+ "WHERE (:clave='' OR b.clave like %:clave%) "
+			+ "AND (:marca='' OR b.marca like %:marca%) "
+			+ "AND (:numSerie='' OR b.numSerie like %:numSerie%) "
+			+ "AND (:compania='' OR b.compania like %:compania%) "
+			+ "AND (:objetivo IS NULL OR :objetivo='' OR b.objetivo IS NULL  OR b.objetivo like %:objetivo%) "
+			+ "AND (:modelo='' OR b.modelo like %:modelo%) "
+			+ "AND (:unidad=0 OR (:unidad>0 AND b.unidades.Id = :unidad) OR (:unidad=-1 AND b.unidades != null)  OR (:unidad=-2 AND b.unidades = null)) "
+			+ " AND (:idEstadoBaliza=0 OR b.estados.Id = :idEstadoBaliza) "
+			+ "AND ((:fechaFin!=null AND :fechaInicio!=null AND b.fechaAlta between :fechaInicio AND :fechaFin) "
+			+ "OR (:fechaFin=null AND :fechaInicio!=null AND b.fechaAlta >=:fechaInicio) "
+			+ "OR (:fechaFin=null AND :fechaInicio=null)) ")
 	public Page<Balizas> buscarBalizas(int idEstadoBaliza, int unidad, String clave, String marca, String numSerie,
 			String compania, String objetivo, String modelo,
 			@DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime fechaInicio,
