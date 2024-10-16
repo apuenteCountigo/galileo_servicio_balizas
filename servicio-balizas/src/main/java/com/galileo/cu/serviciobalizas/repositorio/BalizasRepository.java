@@ -57,7 +57,8 @@ public interface BalizasRepository extends PagingAndSortingRepository<Balizas, L
 			@DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime fechaFin, Pageable p);
 
 	@Query("SELECT b FROM Balizas b WHERE " +
-			"(:idUnidad IS NULL OR b.unidades.id = :idUnidad) AND " +
+			"(:unidad IS NULL OR (:unidad>0 AND b.unidades.id = :unidad) OR (:unidad=-1 AND b.unidades != null)  OR (:unidad=-2 AND b.unidades = null)) AND "
+			+
 			"(:idEstadoBaliza IS NULL OR b.estados.id = :idEstadoBaliza) AND " +
 			"(:clave IS NULL OR b.clave = :clave) AND " +
 			"(:modelo IS NULL OR b.modelo = :modelo) AND " +
@@ -67,7 +68,7 @@ public interface BalizasRepository extends PagingAndSortingRepository<Balizas, L
 			"(:compania IS NULL OR b.compania = :compania) AND " +
 			"(:fechaInicio IS NULL OR :fechaFin IS NULL OR b.fechaAlta BETWEEN :fechaInicio AND :fechaFin)")
 	List<Balizas> findByFilters(
-			@Param("idUnidad") Long idUnidad,
+			@Param("idUnidad") int unidad,
 			@Param("idEstadoBaliza") Long idEstadoBaliza,
 			@Param("clave") String clave,
 			@Param("modelo") String modelo,
