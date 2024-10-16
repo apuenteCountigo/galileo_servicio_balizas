@@ -68,7 +68,7 @@ public interface BalizasRepository extends PagingAndSortingRepository<Balizas, L
 			"(:compania IS NULL OR b.compania = :compania) AND " +
 			"(:fechaInicio IS NULL OR :fechaFin IS NULL OR b.fechaAlta BETWEEN :fechaInicio AND :fechaFin)")
 	List<Balizas> findByFilters(
-			@Param("idUnidad") int unidad,
+			@Param("unidad") int unidad,
 			@Param("idEstadoBaliza") Long idEstadoBaliza,
 			@Param("clave") String clave,
 			@Param("modelo") String modelo,
