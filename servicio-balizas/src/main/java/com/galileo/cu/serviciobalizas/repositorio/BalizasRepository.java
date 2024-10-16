@@ -46,7 +46,7 @@ public interface BalizasRepository extends PagingAndSortingRepository<Balizas, L
 			+ "AND (:marca IS NULL OR :marca='' OR b.marca like %:marca%) "
 			+ "AND (:numSerie IS NULL OR :numSerie='' OR b.numSerie like %:numSerie%) "
 			+ "AND (:compania IS NULL OR :compania='' OR b.compania like %:compania%) "
-			+ "AND ((:unidad = -2 AND b.unidades IS NULL) OR (:objetivo IS NULL OR :objetivo='' OR (b.objetivo IS NOT NULL AND b.objetivo like %:objetivo%))) "
+			+ "AND (:objetivo IS NULL OR :objetivo='' OR b.objetivo like %:objetivo%) "
 			+ "AND (:modelo IS NULL OR :modelo='' OR b.modelo like %:modelo%) "
 			+ "AND (:unidad=0 OR (:unidad>0 AND b.unidades.Id = :unidad) OR (:unidad=-1 AND b.unidades != null)  OR (:unidad=-2 AND b.unidades = null)) "
 			+ " AND (:idEstadoBaliza=0 OR b.estados.Id = :idEstadoBaliza) "
@@ -54,6 +54,22 @@ public interface BalizasRepository extends PagingAndSortingRepository<Balizas, L
 			+ "OR (:fechaFin=null AND :fechaInicio!=null AND b.fechaAlta >=:fechaInicio) "
 			+ "OR (:fechaFin=null AND :fechaInicio=null)) ")
 	public Page<Balizas> buscarBalizas(int idEstadoBaliza, int unidad, String clave, String marca, String numSerie,
+			String compania, String objetivo, String modelo,
+			@DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime fechaInicio,
+			@DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime fechaFin, Pageable p);
+
+	@Query("SELECT b FROM Balizas b "
+			+ "WHERE (:clave IS NULL OR :clave='' OR b.clave like %:clave%) "
+			+ "AND (:marca IS NULL OR :marca='' OR b.marca like %:marca%) "
+			+ "AND (:numSerie IS NULL OR :numSerie='' OR b.numSerie like %:numSerie%) "
+			+ "AND (:compania IS NULL OR :compania='' OR b.compania like %:compania%) "
+			+ "AND (:modelo IS NULL OR :modelo='' OR b.modelo like %:modelo%) "
+			+ "AND (:unidad=0 OR (:unidad>0 AND b.unidades.Id = :unidad) OR (:unidad=-1 AND b.unidades != null)  OR (:unidad=-2 AND b.unidades = null)) "
+			+ " AND (:idEstadoBaliza=0 OR b.estados.Id = :idEstadoBaliza) "
+			+ "AND ((:fechaFin!=null AND :fechaInicio!=null AND b.fechaAlta between :fechaInicio AND :fechaFin) "
+			+ "OR (:fechaFin=null AND :fechaInicio!=null AND b.fechaAlta >=:fechaInicio) "
+			+ "OR (:fechaFin=null AND :fechaInicio=null)) ")
+	public Page<Balizas> buscarBalizasStock(int idEstadoBaliza, int unidad, String clave, String marca, String numSerie,
 			String compania, String objetivo, String modelo,
 			@DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime fechaInicio,
 			@DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime fechaFin, Pageable p);
