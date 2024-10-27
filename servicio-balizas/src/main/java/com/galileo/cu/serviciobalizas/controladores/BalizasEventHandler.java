@@ -185,7 +185,7 @@ public class BalizasEventHandler {
 						balizas.setFechaAsignaUni(LocalDateTime.now());
 						traccar.asignar(balizas);
 						descripcionTraza = "La Baliza: " + balizas.getClave() + " Fue Asignada a la Unidad: "
-								+ balizas.getUnidades().getDenominacion();
+								+ uni.get().getDenominacion();
 					} catch (Exception er) {
 						String err = "Fallo al Intentar Asignar la Baliza:" + balizas.getClave()
 								+ " a una Unidad en DataMiner";
