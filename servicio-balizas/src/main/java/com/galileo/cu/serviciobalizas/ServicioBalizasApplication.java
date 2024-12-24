@@ -20,7 +20,7 @@ public class ServicioBalizasApplication implements CommandLineRunner {
 	@Override
 	public void run(String... args) throws Exception {
 		System.out.println("**************************************");
-		System.out.println("Balizas V-1.1.4 24-12-24 12:49");
+		System.out.println("Balizas V-1.1.4 24-12-24 12:53");
 
 	}
 
